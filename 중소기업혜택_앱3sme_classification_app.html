@@ -652,13 +652,6 @@
             { name: "에치와이", employees: 1030, region: "서울" },
             { name: "미동이엔씨", employees: 103, region: "서울" },
             { name: "모나미", employees: 134, region: "경기" },
-        var sampleCompanies = [
-            { name: "동원산업", employees: 707, region: "서울" },
-            { name: "롯데칠성음료", employees: 5601, region: "서울" },
-            { name: "대일화학공업", employees: 21, region: "서울" },
-            { name: "에치와이", employees: 1030, region: "서울" },
-            { name: "미동이엔씨", employees: 103, region: "서울" },
-            { name: "모나미", employees: 134, region: "경기" },
             { name: "남광토건", employees: 466, region: "경기" },
             { name: "도루코", employees: 490, region: "경기" },
             { name: "삼성제약", employees: 87, region: "경기" },
@@ -857,149 +850,6 @@
         }
 
         function calculateBenefits() {
-            var rdExpense = parseFloat(document.getElementById('rdExpense').value) || 0;
-            var facilityInvestment = parseFloat(document.getElementById('facilityInvestment').value) || 0;
-            var newHires = parseInt(document.getElementById('newHires').value) || 0;
-            var location = document.getElementById('location').value;
-            var techType = document.getElementById('techType').value;
-
-            var totalBenefits = 0;
-            var benefitDetails = [];
-
-            // R&D 세액공제 계산
-            if (rdExpense > 0) {
-                var rdRate = 0.25;
-                if (techType === 'newgrowth') {
-                    rdRate = 0.30;
-                } else if (techType === 'national') {
-                    rdRate = 0.35;
-                }
-                
-                var rdBenefit = rdExpense * rdRate;
-                totalBenefits += rdBenefit;
-                benefitDetails.push('R&D 세액공제: ' + rdBenefit.toFixed(1) + '억원 (' + (rdRate*100) + '% 적용)');
-            }
-
-            // 시설투자 세액공제 계산
-            if (facilityInvestment > 0) {
-                var investmentRate = 0.10;
-                if (techType === 'national') {
-                    investmentRate = 0.20;
-                } else if (techType === 'newgrowth') {
-                    investmentRate = 0.09;
-                }
-                
-                var investmentBenefit = facilityInvestment * investmentRate;
-                totalBenefits += investmentBenefit;
-                benefitDetails.push('시설투자 세액공제: ' + investmentBenefit.toFixed(1) + '억원 (' + (investmentRate*100) + '% 적용)');
-            }
-
-            // 고용세액공제 계산
-            if (newHires > 0) {
-                var perPersonBenefit = location === 'local' ? 0.095 : 0.085;
-                var employmentBenefit = newHires * perPersonBenefit;
-                totalBenefits += employmentBenefit;
-                benefitDetails.push('고용세액공제: ' + employmentBenefit.toFixed(1) + '억원 (1인당 ' + (location === 'local' ? '950' : '850') + '만원 × ' + newHires + '명)');
-            }
-
-            var resultDiv = document.getElementById('benefitsResult');
-            
-            if (totalBenefits === 0) {
-                resultDiv.innerHTML = '<div class="result-title">혜택 계산 결과</div><p>계산할 항목을 입력해주세요.</p>';
-                resultDiv.className = 'result-card warning';
-            } else {
-                var resultHtml = '<div class="result-title">예상 세제 혜택: 총 ' + totalBenefits.toFixed(1) + '억원</div>';
-                resultHtml += '<h4>세부 혜택 내역:</h4>';
-                resultHtml += '<ul class="benefit-list">';
-                
-                for (var i = 0; i < benefitDetails.length; i++) {
-                    resultHtml += '<li>' + benefitDetails[i] + '</li>';
-                }
-                
-                resultHtml += '</ul>';
-                resultHtml += '<br><p><strong>추가 혜택:</strong></p>';
-                resultHtml += '<ul class="benefit-list">';
-                resultHtml += '<li>법인세율 우대 (일반기업 22% → 중소기업 10~20%)</li>';
-                resultHtml += '<li>접대비 한도 확대 (1,200만원 → 2,400만원)</li>';
-                resultHtml += '<li>이월결손금 100% 공제 (중견기업 60% 대비)</li>';
-                resultHtml += '<li>정책자금 우대금리 적용</li>';
-                resultHtml += '<li>공공조달 우대 및 가점</li>';
-                resultHtml += '</ul>';
-                resultHtml += '<br><p style="font-size: 0.9em; color: #666;">※ 본 계산은 예시이며, 실제 적용 시에는 세무 전문가 상담을 받으시기 바랍니다.</p>';
-                    
-                resultDiv.innerHTML = resultHtml;
-                resultDiv.className = 'result-card success';
-            }
-            
-            resultDiv.style.display = 'block';
-        }
-
-        function clearForm() {
-            document.getElementById('companyName').value = '';
-            document.getElementById('industry').value = '';
-            document.getElementById('avgSales').value = '';
-            document.getElementById('totalAssets').value = '';
-            document.getElementById('employees').value = '';
-            document.getElementById('independence').value = 'true';
-            document.getElementById('classificationResult').style.display = 'none';
-        }
-
-        function clearBenefitsForm() {
-            var elements = ['companyType', 'annualSales', 'corporateTax', 'rdExpense', 'facilityInvestment', 'currentEmployees', 'newHires', 'youthHires', 'entertainmentExpense', 'carryforwardLoss'];
-            for (var i = 0; i < elements.length; i++) {
-                var element = document.getElementById(elements[i]);
-                if (element) {
-                    element.value = '';
-                }
-            }
-            
-            var companyTypeElement = document.getElementById('companyType');
-            if (companyTypeElement) {
-                companyTypeElement.value = 'small';
-            }
-            
-            var locationElement = document.getElementById('location');
-            if (locationElement) {
-                locationElement.value = 'capital';
-            }
-            
-            var techTypeElement = document.getElementById('techType');
-            if (techTypeElement) {
-                techTypeElement.value = 'general';
-            }
-            
-            var investmentTypeElement = document.getElementById('investmentType');
-            if (investmentTypeElement) {
-                investmentTypeElement.value = 'productivity';
-            }
-            
-            var benefitsResultElement = document.getElementById('benefitsResult');
-            if (benefitsResultElement) {
-                benefitsResultElement.style.display = 'none';
-            }
-        }
-
-        // 페이지 로드 시 초기화
-        window.addEventListener('DOMContentLoaded', function() {
-            var firstTab = document.querySelector('.tab');
-            var firstTabContent = document.querySelector('.tab-content');
-            
-            if (firstTab && firstTabContent) {
-                firstTab.classList.add('active');
-                firstTabContent.classList.add('active');
-            }
-        });
-    </script>
-</body>
-</html>.');
-        }
-
-        function clearSearch() {
-            document.getElementById('searchKeyword').value = '';
-            document.getElementById('searchResults').innerHTML = '';
-        }
-
-        function calculateBenefits() {
             var companyType = document.getElementById('companyType').value;
             var rdExpense = parseFloat(document.getElementById('rdExpense').value) || 0;
             var facilityInvestment = parseFloat(document.getElementById('facilityInvestment').value) || 0;
@@ -1093,10 +943,35 @@
         }
 
         function clearBenefitsForm() {
+            var elements = ['companyType', 'annualSales', 'corporateTax', 'rdExpense', 'techType', 'facilityInvestment', 'investmentType', 'currentEmployees', 'newHires', 'youthHires', 'location', 'entertainmentExpense', 'carryforwardLoss'];
+            for (var i = 0; i < elements.length; i++) {
+                var element = document.getElementById(elements[i]);
+                if (element && element.tagName.toLowerCase() === 'input') {
+                    element.value = '';
+                }
+            }
+            
+            // 셀렉트 박스들 초기화
             var companyTypeElement = document.getElementById('companyType');
             if (companyTypeElement) {
                 companyTypeElement.value = 'small';
             }
+            
+            var locationElement = document.getElementById('location');
+            if (locationElement) {
+                locationElement.value = 'capital';
+            }
+            
+            var techTypeElement = document.getElementById('techType');
+            if (techTypeElement) {
+                techTypeElement.value = 'general';
+            }
+            
+            var investmentTypeElement = document.getElementById('investmentType');
+            if (investmentTypeElement) {
+                investmentTypeElement.value = 'productivity';
+            }
+            
             var benefitsResultElement = document.getElementById('benefitsResult');
             if (benefitsResultElement) {
                 benefitsResultElement.style.display = 'none';
