@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025년 중소기업 범위기준 판별 앱</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-card {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #3498db;
+            background: #f8f9fa;
+            display: none;
+        }
+
+        .result-card.success {
+            border-left-color: #27ae60;
+            background: #d4edda;
+        }
+
+        .result-card.warning {
+            border-left-color: #f39c12;
+            background: #fff3cd;
+        }
+
+        .result-card.error {
+            border-left-color: #e74c3c;
+            background: #f8d7da;
+        }
+
+        .result-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .benefit-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .benefit-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-list li:before {
+            content: "✓";
+            color: #27ae60;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f1f2f6;
+            border-radius: 8px;
+            padding: 5px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            color: #3498db;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-box {
+            background: #e8f4fd;
+            border: 1px solid #bee5eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .comparison-table th {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .search-form {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #e1e8ed;
+        }
+
+        .company-result {
+            background: white;
+            border: 1px solid #e1e8ed;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .company-result:hover {
+            background: #f8f9fa;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .company-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #2c3e50;
+        }
+
+        .company-info {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>2025년 중소기업 범위기준 판별 시스템</h1>
+            <p>중소기업 졸업 유예제도 확대 및 새로운 매출구간 반영</p>
+        </div>
+
+        <div class="content">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab(event, 'classification')">기업 분류 판별</button>
+                <button class="tab" onclick="showTab(event, 'search')">기업 검색</button>
+                <button class="tab" onclick="showTab(event, 'benefits')">혜택 계산기</button>
+                <button class="tab" onclick="showTab(event, 'comparison')">구간별 비교</button>
+                <button class="tab" onclick="showTab(event, 'info')">2025년 개편 정보</button>
+            </div>
+
+            <!-- 기업 분류 판별 탭 -->
+            <div id="classification" class="tab-content active">
+                <h2>기업 분류 판별</h2>
+                
+                <div class="form-group">
+                    <label for="companyName">기업명 (선택사항)</label>
+                    <input type="text" id="companyName" placeholder="예: 삼성전자">
+                </div>
+
+                <div class="form-group">
+                    <label for="industry">업종 선택</label>
+                    <select id="industry" onchange="updateSalesLimits()">
+                        <option value="">업종을 선택하세요</option>
+                        <optgroup label="제조업">
+                            <option value="C10">식료품 제조업</option>
+                            <option value="C17">펄프, 종이 및 종이제품 제조업</option>
+                            <option value="C20">화학물질 및 화학제품 제조업</option>
+                            <option value="C22">고무제품 및 플라스틱제품 제조업</option>
+                            <option value="C24">1차 금속 제조업</option>
+                            <option value="C25">금속가공제품 제조업</option>
+                            <option value="C28">전기장비 제조업</option>
+                            <option value="C29">그 밖의 기계 및 장비 제조업</option>
+                            <option value="C30">자동차 및 트레일러 제조업</option>
+                            <option value="C31">그 밖의 운송장비 제조업</option>
+                            <option value="C33">그 밖의 제품 제조업</option>
+                        </optgroup>
+                        <optgroup label="서비스업">
+                            <option value="F">건설업</option>
+                            <option value="G">도매 및 소매업</option>
+                            <option value="H">운수 및 창고업</option>
+                            <option value="J">정보통신업</option>
+                            <option value="N">사업시설관리, 사업지원 및 임대서비스업</option>
+                        </optgroup>
+                        <optgroup label="기타">
+                            <option value="E">수도, 하수 및 폐기물 처리업</option>
+                            <option value="K">금융 및 보험업</option>
+                            <option value="L">부동산업</option>
+                            <option value="I">숙박 및 음식점업</option>
+                            <option value="P">교육 서비스업</option>
+                            <option value="Q">보건업 및 사회복지 서비스업</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="avgSales">최근 3년 평균 매출액 (억원)</label>
+                    <input type="number" id="avgSales" placeholder="예: 800" step="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label for="totalAssets">자산총액 (억원)</label>
+                    <input type="number" id="totalAssets" placeholder="예: 3000" step="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label for="employees">상시근로자수 (명)</label>
+                    <input type="number" id="employees" placeholder="예: 300">
+                </div>
+
+                <div class="form-group">
+                    <label for="independence">독립성 여부</label>
+                    <select id="independence">
+                        <option value="true">독립 기업</option>
+                        <option value="false">대기업 계열사/종속회사</option>
+                    </select>
+                </div>
+
+                <button class="btn" onclick="classifyCompany()">기업 분류 판별하기</button>
+                <button class="btn" onclick="clearForm()">초기화</button>
+
+                <div id="classificationResult" class="result-card"></div>
+            </div>
+
+            <!-- 기업 검색 탭 -->
+            <div id="search" class="tab-content">
+                <h2>기업 검색 (서울/경기 지역)</h2>
+                
+                <div class="search-form">
+                    <div class="form-group">
+                        <label for="searchKeyword">기업명 검색</label>
+                        <input type="text" id="searchKeyword" placeholder="기업명을 입력하세요" onkeypress="if(event.key==='Enter') searchCompanies()">
+                    </div>
+                    
+                    <button class="btn" onclick="searchCompanies()">검색</button>
+                    <button class="btn" onclick="clearSearch()">초기화</button>
+                </div>
+
+                <div id="searchResults"></div>
+            </div>
+
+            <!-- 혜택 계산기 탭 -->
+            <div id="benefits" class="tab-content">
+                <h2>중소기업 혜택 계산기</h2>
+                
+                <div class="info-box">
+                    <h3>📊 기업 기본 정보</h3>
+                    <div class="form-group">
+                        <label for="companyType">기업 분류</label>
+                        <select id="companyType">
+                            <option value="small">소기업</option>
+                            <option value="medium">중기업</option>
+                            <option value="mediumCompany">중견기업 (초기 3년)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="annualSales">연매출액 (억원)</label>
+                        <input type="number" id="annualSales" placeholder="예: 500" step="0.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="corporateTax">예상 법인세 과세표준 (억원)</label>
+                        <input type="number" id="corporateTax" placeholder="예: 100" step="0.1">
+                        <small style="color: #666;">법인세 계산을 위한 과세표준을 입력하세요</small>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>🔬 R&D 및 투자 정보</h3>
+                    <div class="form-group">
+                        <label for="rdExpense">연간 R&D 비용 (억원)</label>
+                        <input type="number" id="rdExpense" placeholder="예: 50" step="0.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="techType">기술 분야</label>
+                        <select id="techType">
+                            <option value="general">일반 기술</option>
+                            <option value="newgrowth">신성장·원천기술</option>
+                            <option value="national">국가전략기술</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="facilityInvestment">시설투자 금액 (억원)</label>
+                        <input type="number" id="facilityInvestment" placeholder="예: 30" step="0.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="investmentType">투자 유형</label>
+                        <select id="investmentType">
+                            <option value="productivity">생산성 향상 시설</option>
+                            <option value="safety">안전설비</option>
+                            <option value="energy">에너지절약시설</option>
+                            <option value="environment">환경보전시설</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>👥 고용 정보</h3>
+                    <div class="form-group">
+                        <label for="currentEmployees">현재 상시근로자 수 (명)</label>
+                        <input type="number" id="currentEmployees" placeholder="예: 50">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="newHires">신규 채용 인원 (명)</label>
+                        <input type="number" id="newHires" placeholder="예: 10">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="youthHires">청년(15~34세) 신규채용 (명)</label>
+                        <input type="number" id="youthHires" placeholder="예: 8">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="location">사업장 위치</label>
+                        <select id="location">
+                            <option value="capital">수도권</option>
+                            <option value="local">지방</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>💼 기타 비용</h3>
+                    <div class="form-group">
+                        <label for="entertainmentExpense">연간 접대비 (만원)</label>
+                        <input type="number" id="entertainmentExpense" placeholder="예: 3000" step="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="carryforwardLoss">이월결손금 (억원)</label>
+                        <input type="number" id="carryforwardLoss" placeholder="예: 20" step="0.1">
+                    </div>
+                </div>
+
+                <button class="btn" onclick="calculateBenefits()">상세 혜택 계산하기</button>
+                <button class="btn" onclick="clearBenefitsForm()">초기화</button>
+
+                <div id="benefitsResult" class="result-card"></div>
+            </div>
+
+            <!-- 구간별 비교 탭 -->
+            <div id="comparison" class="tab-content">
+                <h2>2025년 개편 전후 매출구간 비교</h2>
+                
+                <h3>중기업 매출구간</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>현행 (5개 구간)</th>
+                        <th>개편 (7개 구간)</th>
+                        <th>변경사항</th>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>1,800억원 이하</td>
+                        <td style="color: #27ae60; font-weight: 600;">신설</td>
+                    </tr>
+                    <tr>
+                        <td>1,500억원 이하</td>
+                        <td>1,500억원 이하</td>
+                        <td>유지</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>1,200억원 이하</td>
+                        <td style="color: #27ae60; font-weight: 600;">신설</td>
+                    </tr>
+                    <tr>
+                        <td>1,000억원 이하</td>
+                        <td>1,000억원 이하</td>
+                        <td>유지</td>
+                    </tr>
+                    <tr>
+                        <td>800억원 이하</td>
+                        <td>800억원 이하</td>
+                        <td>유지</td>
+                    </tr>
+                    <tr>
+                        <td>600억원 이하</td>
+                        <td>600억원 이하</td>
+                        <td>유지</td>
+                    </tr>
+                    <tr>
+                        <td>400억원 이하</td>
+                        <td>400억원 이하</td>
+                        <td>유지</td>
+                    </tr>
+                </table>
+
+                <h3>소기업 매출구간</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>현행 (5개 구간)</th>
+                        <th>개편 (9개 구간)</th>
+                        <th>변경사항</th>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>140억원 이하</td>
+                        <td style="color: #27ae60; font-weight: 600;">신설</td>
+                    </tr>
+                    <tr>
+                        <td>120억원 이하</td>
+                        <td>120억원 이하</td>
+                        <td>유지</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>100억원 이하</td>
+                        <td style="color: #27ae60; font-weight: 600;">신설</td>
+                    </tr>
+                    <tr>
+                        <td>80억원 이하</td>
+                        <td>80억원 이하</td>
+                        <td>유지</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>60억원 이하</td>
+                        <td style="color: #27ae60; font-weight: 600;">신설</td>
+                    </tr>
+                    <tr>
+                        <td>50억원 이하</td>
+                        <td>50억원 이하</td>
+                        <td>유지</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>40억원 이하</td>
+                        <td style="color: #27ae60; font-weight: 600;">신설</td>
+                    </tr>
+                    <tr>
+                        <td>30억원 이하</td>
+                        <td>30억원 이하</td>
+                        <td>유지</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>15억원 이하</td>
+                        <td style="color: #27ae60; font-weight: 600;">신설</td>
+                    </tr>
+                    <tr>
+                        <td>10억원 이하</td>
+                        <td>-</td>
+                        <td style="color: #e74c3c; font-weight: 600;">폐지</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- 2025년 개편 정보 탭 -->
+            <div id="info" class="tab-content">
+                <h2>2025년 중소기업 범위기준 개편 정보</h2>
+                
+                <div class="info-box">
+                    <h3>주요 변경사항</h3>
+                    <ul class="benefit-list">
+                        <li>중소기업 졸업 유예기간 3년 → 5년 확대</li>
+                        <li>코스피/코스닥 상장기업 추가 2년 유예 (총 7년)</li>
+                        <li>중기업 매출구간 5개 → 7개로 확대</li>
+                        <li>소기업 매출구간 5개 → 9개로 확대</li>
+                        <li>R&D 세액공제 초기 중견기업 구간 신설</li>
+                        <li>고용촉진장려금 모든 중견기업 확대</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>혜택 확대 내용</h3>
+                    <ul class="benefit-list">
+                        <li>국가전략기술 R&D: 3년간 35% 세액공제</li>
+                        <li>신성장·원천기술 R&D: 25% 세액공제 구간 신설</li>
+                        <li>정부 R&D 현금부담비율 13% → 10%로 완화</li>
+                        <li>혁신제품 시범구매사업 중견기업 참여 허용</li>
+                        <li>5조원 규모 중견기업 전용 펀드 조성</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>시행 일정</h3>
+                    <ul class="benefit-list">
+                        <li>5월: 중소기업기본법 시행령 입법예고</li>
+                        <li>7월: 국무회의 상정 (잠정)</li>
+                        <li>~9월: 중소기업 온라인 확인시스템 개편</li>
+                        <li>9월: 제도 시행 (잠정)</li>
+                    </ul>
+                </div>
+
+                <div class="info-box">
+                    <h3>업종별 조정 현황</h3>
+                    <p><strong>중기업 범위 상향 업종:</strong> 16개 업종 (44개 중)</p>
+                    <ul class="benefit-list">
+                        <li>펄프·종이제품, 1차금속, 전기장비: 1,800억원</li>
+                        <li>식료품, 화학물질, 고무·플라스틱, 금속가공, 기계장비, 자동차, 운송장비, 건설업, 도소매업: 1,200억원</li>
+                        <li>기타제품, 운수창고, 정보통신: 1,000억원</li>
+                        <li>사업지원서비스: 800억원</li>
+                    </ul>
+                    
+                    <p><strong>소기업 범위 상향 업종:</strong> 12개 업종 (43개 중)</p>
+                    <ul class="benefit-list">
+                        <li>석유정제품, 1차금속, 운수창고: 140억원</li>
+                        <li>금융보험: 100억원</li>
+                        <li>도소매업: 60억원</li>
+                        <li>폐기물처리, 부동산: 40억원</li>
+                        <li>기계수리, 숙박음식, 교육서비스, 보건복지, 개인서비스: 15억원</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var industryLimits = {
+            "C17": { medium: 1800, small: 80 },
+            "C24": { medium: 1800, small: 140 },
+            "C28": { medium: 1800, small: 120 },
+            "C10": { medium: 1200, small: 120 },
+            "C20": { medium: 1200, small: 120 },
+            "C22": { medium: 1200, small: 80 },
+            "C25": { medium: 1200, small: 120 },
+            "C29": { medium: 1200, small: 120 },
+            "C30": { medium: 1200, small: 120 },
+            "C31": { medium: 1200, small: 80 },
+            "F": { medium: 1200, small: 80 },
+            "G": { medium: 1200, small: 60 },
+            "C33": { medium: 1000, small: 80 },
+            "H": { medium: 1000, small: 100 },
+            "J": { medium: 1000, small: 50 },
+            "N": { medium: 800, small: 30 },
+            "E": { medium: 600, small: 40 },
+            "K": { medium: 400, small: 100 },
+            "L": { medium: 400, small: 40 },
+            "I": { medium: 400, small: 15 },
+            "P": { medium: 400, small: 15 },
+            "Q": { medium: 600, small: 15 }
+        };
+
+        var sampleCompanies = [
+            { name: "동원산업", employees: 707, region: "서울" },
+            { name: "롯데칠성음료", employees: 5601, region: "서울" },
+            { name: "대일화학공업", employees: 21, region: "서울" },
+            { name: "에치와이", employees: 1030, region: "서울" },
+            { name: "미동이엔씨", employees: 103, region: "서울" },
+            { name: "모나미", employees: 134, region: "경기" },
+        var sampleCompanies = [
+            { name: "동원산업", employees: 707, region: "서울" },
+            { name: "롯데칠성음료", employees: 5601, region: "서울" },
+            { name: "대일화학공업", employees: 21, region: "서울" },
+            { name: "에치와이", employees: 1030, region: "서울" },
+            { name: "미동이엔씨", employees: 103, region: "서울" },
+            { name: "모나미", employees: 134, region: "경기" },
+            { name: "남광토건", employees: 466, region: "경기" },
+            { name: "도루코", employees: 490, region: "경기" },
+            { name: "삼성제약", employees: 87, region: "경기" },
+            { name: "동명기술공단종합건축사사무소", employees: 1258, region: "경기" },
+            { name: "한국휴텍스제약", employees: 140, region: "경기" },
+            { name: "한국종합기술", employees: 1554, region: "경기" }
+        ];
+
+        function showTab(event, tabName) {
+            var tabs = document.querySelectorAll('.tab');
+            var contents = document.querySelectorAll('.tab-content');
+            
+            for (var i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            for (var i = 0; i < contents.length; i++) {
+                contents[i].classList.remove('active');
+            }
+            
+            if (event && event.target) {
+                event.target.classList.add('active');
+            }
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        function updateSalesLimits() {
+            var industry = document.getElementById('industry').value;
+            var avgSales = document.getElementById('avgSales');
+            
+            if (industry && industryLimits[industry]) {
+                var limits = industryLimits[industry];
+                avgSales.setAttribute('data-medium-limit', limits.medium);
+                avgSales.setAttribute('data-small-limit', limits.small);
+                avgSales.placeholder = '중기업: ' + limits.medium + '억원 이하, 소기업: ' + limits.small + '억원 이하';
+            }
+        }
+
+        function classifyCompany() {
+            var companyName = document.getElementById('companyName').value;
+            var industry = document.getElementById('industry').value;
+            var avgSales = parseFloat(document.getElementById('avgSales').value);
+            var totalAssets = parseFloat(document.getElementById('totalAssets').value);
+            var employees = parseInt(document.getElementById('employees').value);
+            var independence = document.getElementById('independence').value === 'true';
+
+            if (!industry || isNaN(avgSales) || isNaN(totalAssets)) {
+                alert('필수 항목을 모두 입력해주세요.');
+                return;
+            }
+
+            var resultDiv = document.getElementById('classificationResult');
+            var limits = industryLimits[industry];
+
+            if (!limits) {
+                resultDiv.innerHTML = '<div class="result-title">❌ 업종 정보 없음</div><p>선택하신 업종의 기준 정보가 없습니다.</p>';
+                resultDiv.className = 'result-card error';
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            var classification = '';
+            var resultClass = '';
+            var benefits = [];
+
+            if (totalAssets >= 5000 || !independence) {
+                classification = '대기업 또는 중견기업';
+                resultClass = 'error';
+                benefits = ['대기업/중견기업 지원제도 적용'];
+            } else if (avgSales <= limits.small) {
+                classification = '소기업';
+                resultClass = 'success';
+                benefits = [
+                    '법인세율 특례 적용 (10~20%)',
+                    'R&D 세액공제 25%',
+                    '투자세액공제 우대',
+                    '정책자금 우선 지원',
+                    '공공조달 우대',
+                    '고용지원 프로그램 우선 참여',
+                    '중소기업 졸업 유예제도 (최대 5년)',
+                    '청년 고용 시 소득세 감면'
+                ];
+            } else if (avgSales <= limits.medium) {
+                classification = '중기업';
+                resultClass = 'success';
+                benefits = [
+                    '법인세율 특례 적용 (10~20%)',
+                    'R&D 세액공제 25%',
+                    '투자세액공제 우대',
+                    '정책자금 우선 지원',
+                    '공공조달 우대',
+                    '고용지원 프로그램 우선 참여',
+                    '중소기업 졸업 유예제도 (최대 5년)'
+                ];
+            } else if (avgSales <= 3000) {
+                classification = '중견기업 (초기)';
+                resultClass = 'warning';
+                benefits = [
+                    'R&D 세액공제 (신성장·원천기술 25%)',
+                    '통합투자세액공제 우대',
+                    '고용촉진장려금 (연 최대 720만원)',
+                    '중견기업 전용 정책자금',
+                    '가업상속공제 적용 가능'
+                ];
+            } else {
+                classification = '대기업';
+                resultClass = 'error';
+                benefits = ['일반 세제 적용'];
+            }
+
+            var selectedOption = document.querySelector('#industry option:checked');
+            var industryText = selectedOption ? selectedOption.text : '선택된 업종 없음';
+
+            var resultHtml = '<div class="result-title">🏢 ' + (companyName ? companyName + ' ' : '') + '분류 결과: ' + classification + '</div>' +
+                '<p><strong>업종:</strong> ' + industryText + '</p>' +
+                '<p><strong>평균 매출액:</strong> ' + avgSales + '억원</p>' +
+                '<p><strong>해당 업종 기준:</strong> 중기업 ' + limits.medium + '억원 이하, 소기업 ' + limits.small + '억원 이하</p>' +
+                '<p><strong>자산총액:</strong> ' + totalAssets + '억원</p>' +
+                '<p><strong>상시근로자:</strong> ' + employees + '명</p>' +
+                '<br>' +
+                '<h4>🎯 적용 가능한 혜택:</h4>' +
+                '<ul class="benefit-list">';
+            
+            for (var i = 0; i < benefits.length; i++) {
+                resultHtml += '<li>' + benefits[i] + '</li>';
+            }
+            resultHtml += '</ul>';
+
+            resultDiv.innerHTML = resultHtml;
+            resultDiv.className = 'result-card ' + resultClass;
+            resultDiv.style.display = 'block';
+        }
+
+        function searchCompanies() {
+            var keyword = document.getElementById('searchKeyword').value.trim();
+            var resultsDiv = document.getElementById('searchResults');
+            
+            if (!keyword) {
+                alert('검색할 기업명을 입력해주세요.');
+                return;
+            }
+
+            var filteredCompanies = [];
+            for (var i = 0; i < sampleCompanies.length; i++) {
+                if (sampleCompanies[i].name.toLowerCase().indexOf(keyword.toLowerCase()) !== -1) {
+                    filteredCompanies.push(sampleCompanies[i]);
+                }
+            }
+
+            if (filteredCompanies.length === 0) {
+                resultsDiv.innerHTML = '<div class="result-card warning">' +
+                    '<div class="result-title">검색 결과 없음</div>' +
+                    '<p>"' + keyword + '"에 해당하는 기업을 찾을 수 없습니다.</p>' +
+                    '<p>※ 현재는 서울/경기 지역의 샘플 데이터만 제공됩니다.</p>' +
+                    '</div>';
+                return;
+            }
+
+            var resultsHtml = '<h3>검색 결과 (' + filteredCompanies.length + '개)</h3>';
+            
+            for (var i = 0; i < filteredCompanies.length; i++) {
+                var company = filteredCompanies[i];
+                var employeeCategory = '';
+                if (company.employees < 50) {
+                    employeeCategory = '소상공인 (50명 미만)';
+                } else if (company.employees < 300) {
+                    employeeCategory = '중소기업 규모 (50-299명)';
+                } else {
+                    employeeCategory = '중견기업 이상 규모 (300명 이상)';
+                }
+
+                resultsHtml += '<div class="company-result" onclick="selectCompany(\'' + company.name + '\', ' + company.employees + ')">' +
+                    '<div class="company-name">' + company.name + '</div>' +
+                    '<div class="company-info">' +
+                    '📍 ' + company.region + ' | 👥 ' + company.employees + '명 | ' + employeeCategory +
+                    '</div>' +
+                    '</div>';
+            }
+
+            resultsDiv.innerHTML = resultsHtml;
+        }
+
+        function selectCompany(name, employees) {
+            document.getElementById('companyName').value = name;
+            document.getElementById('employees').value = employees;
+            
+            var classificationTab = document.querySelector('.tab');
+            var classificationEvent = { target: classificationTab };
+            showTab(classificationEvent, 'classification');
+            
+            alert(name + ' 기업 정보가 입력되었습니다. 업종과 매출액을 추가로 입력해주세요.');
+        }
+
+        function clearSearch() {
+            document.getElementById('searchKeyword').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+
+        function calculateBenefits() {
+            var rdExpense = parseFloat(document.getElementById('rdExpense').value) || 0;
+            var facilityInvestment = parseFloat(document.getElementById('facilityInvestment').value) || 0;
+            var newHires = parseInt(document.getElementById('newHires').value) || 0;
+            var location = document.getElementById('location').value;
+            var techType = document.getElementById('techType').value;
+
+            var totalBenefits = 0;
+            var benefitDetails = [];
+
+            // R&D 세액공제 계산
+            if (rdExpense > 0) {
+                var rdRate = 0.25;
+                if (techType === 'newgrowth') {
+                    rdRate = 0.30;
+                } else if (techType === 'national') {
+                    rdRate = 0.35;
+                }
+                
+                var rdBenefit = rdExpense * rdRate;
+                totalBenefits += rdBenefit;
+                benefitDetails.push('R&D 세액공제: ' + rdBenefit.toFixed(1) + '억원 (' + (rdRate*100) + '% 적용)');
+            }
+
+            // 시설투자 세액공제 계산
+            if (facilityInvestment > 0) {
+                var investmentRate = 0.10;
+                if (techType === 'national') {
+                    investmentRate = 0.20;
+                } else if (techType === 'newgrowth') {
+                    investmentRate = 0.09;
+                }
+                
+                var investmentBenefit = facilityInvestment * investmentRate;
+                totalBenefits += investmentBenefit;
+                benefitDetails.push('시설투자 세액공제: ' + investmentBenefit.toFixed(1) + '억원 (' + (investmentRate*100) + '% 적용)');
+            }
+
+            // 고용세액공제 계산
+            if (newHires > 0) {
+                var perPersonBenefit = location === 'local' ? 0.095 : 0.085;
+                var employmentBenefit = newHires * perPersonBenefit;
+                totalBenefits += employmentBenefit;
+                benefitDetails.push('고용세액공제: ' + employmentBenefit.toFixed(1) + '억원 (1인당 ' + (location === 'local' ? '950' : '850') + '만원 × ' + newHires + '명)');
+            }
+
+            var resultDiv = document.getElementById('benefitsResult');
+            
+            if (totalBenefits === 0) {
+                resultDiv.innerHTML = '<div class="result-title">혜택 계산 결과</div><p>계산할 항목을 입력해주세요.</p>';
+                resultDiv.className = 'result-card warning';
+            } else {
+                var resultHtml = '<div class="result-title">예상 세제 혜택: 총 ' + totalBenefits.toFixed(1) + '억원</div>';
+                resultHtml += '<h4>세부 혜택 내역:</h4>';
+                resultHtml += '<ul class="benefit-list">';
+                
+                for (var i = 0; i < benefitDetails.length; i++) {
+                    resultHtml += '<li>' + benefitDetails[i] + '</li>';
+                }
+                
+                resultHtml += '</ul>';
+                resultHtml += '<br><p><strong>추가 혜택:</strong></p>';
+                resultHtml += '<ul class="benefit-list">';
+                resultHtml += '<li>법인세율 우대 (일반기업 22% → 중소기업 10~20%)</li>';
+                resultHtml += '<li>접대비 한도 확대 (1,200만원 → 2,400만원)</li>';
+                resultHtml += '<li>이월결손금 100% 공제 (중견기업 60% 대비)</li>';
+                resultHtml += '<li>정책자금 우대금리 적용</li>';
+                resultHtml += '<li>공공조달 우대 및 가점</li>';
+                resultHtml += '</ul>';
+                resultHtml += '<br><p style="font-size: 0.9em; color: #666;">※ 본 계산은 예시이며, 실제 적용 시에는 세무 전문가 상담을 받으시기 바랍니다.</p>';
+                    
+                resultDiv.innerHTML = resultHtml;
+                resultDiv.className = 'result-card success';
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+
+        function clearForm() {
+            document.getElementById('companyName').value = '';
+            document.getElementById('industry').value = '';
+            document.getElementById('avgSales').value = '';
+            document.getElementById('totalAssets').value = '';
+            document.getElementById('employees').value = '';
+            document.getElementById('independence').value = 'true';
+            document.getElementById('classificationResult').style.display = 'none';
+        }
+
+        function clearBenefitsForm() {
+            var elements = ['companyType', 'annualSales', 'corporateTax', 'rdExpense', 'facilityInvestment', 'currentEmployees', 'newHires', 'youthHires', 'entertainmentExpense', 'carryforwardLoss'];
+            for (var i = 0; i < elements.length; i++) {
+                var element = document.getElementById(elements[i]);
+                if (element) {
+                    element.value = '';
+                }
+            }
+            
+            var companyTypeElement = document.getElementById('companyType');
+            if (companyTypeElement) {
+                companyTypeElement.value = 'small';
+            }
+            
+            var locationElement = document.getElementById('location');
+            if (locationElement) {
+                locationElement.value = 'capital';
+            }
+            
+            var techTypeElement = document.getElementById('techType');
+            if (techTypeElement) {
+                techTypeElement.value = 'general';
+            }
+            
+            var investmentTypeElement = document.getElementById('investmentType');
+            if (investmentTypeElement) {
+                investmentTypeElement.value = 'productivity';
+            }
+            
+            var benefitsResultElement = document.getElementById('benefitsResult');
+            if (benefitsResultElement) {
+                benefitsResultElement.style.display = 'none';
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        window.addEventListener('DOMContentLoaded', function() {
+            var firstTab = document.querySelector('.tab');
+            var firstTabContent = document.querySelector('.tab-content');
+            
+            if (firstTab && firstTabContent) {
+                firstTab.classList.add('active');
+                firstTabContent.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>.');
+        }
+
+        function clearSearch() {
+            document.getElementById('searchKeyword').value = '';
+            document.getElementById('searchResults').innerHTML = '';
+        }
+
+        function calculateBenefits() {
+            var companyType = document.getElementById('companyType').value;
+            var rdExpense = parseFloat(document.getElementById('rdExpense').value) || 0;
+            var facilityInvestment = parseFloat(document.getElementById('facilityInvestment').value) || 0;
+            var newHires = parseInt(document.getElementById('newHires').value) || 0;
+            var location = document.getElementById('location').value;
+            var techType = document.getElementById('techType').value;
+
+            var totalBenefits = 0;
+            var benefitDetails = [];
+
+            // R&D 세액공제 계산
+            if (rdExpense > 0) {
+                var rdRate = 0.25;
+                if (techType === 'newgrowth') {
+                    rdRate = 0.30;
+                } else if (techType === 'national') {
+                    rdRate = 0.35;
+                }
+                
+                var rdBenefit = rdExpense * rdRate;
+                totalBenefits += rdBenefit;
+                benefitDetails.push('R&D 세액공제: ' + rdBenefit.toFixed(1) + '억원 (' + (rdRate*100) + '% 적용)');
+            }
+
+            // 시설투자 세액공제 계산
+            if (facilityInvestment > 0) {
+                var investmentRate = 0.10;
+                if (techType === 'national') {
+                    investmentRate = 0.20;
+                } else if (techType === 'newgrowth') {
+                    investmentRate = 0.09;
+                }
+                
+                var investmentBenefit = facilityInvestment * investmentRate;
+                totalBenefits += investmentBenefit;
+                benefitDetails.push('시설투자 세액공제: ' + investmentBenefit.toFixed(1) + '억원 (' + (investmentRate*100) + '% 적용)');
+            }
+
+            // 고용세액공제 계산
+            if (newHires > 0) {
+                var perPersonBenefit = location === 'local' ? 0.095 : 0.085;
+                var employmentBenefit = newHires * perPersonBenefit;
+                totalBenefits += employmentBenefit;
+                benefitDetails.push('고용세액공제: ' + employmentBenefit.toFixed(1) + '억원 (1인당 ' + (location === 'local' ? '950' : '850') + '만원 × ' + newHires + '명)');
+            }
+
+            var resultDiv = document.getElementById('benefitsResult');
+            
+            if (totalBenefits === 0) {
+                resultDiv.innerHTML = '<div class="result-title">⚠️ 혜택 계산 결과</div><p>계산할 항목을 입력해주세요.</p>';
+                resultDiv.className = 'result-card warning';
+            } else {
+                var resultHtml = '<div class="result-title">💰 예상 세제 혜택: 총 ' + totalBenefits.toFixed(1) + '억원</div>' +
+                    '<h4>세부 혜택 내역:</h4>' +
+                    '<ul class="benefit-list">';
+                
+                for (var i = 0; i < benefitDetails.length; i++) {
+                    resultHtml += '<li>' + benefitDetails[i] + '</li>';
+                }
+                
+                resultHtml += '</ul>' +
+                    '<br>' +
+                    '<p><strong>추가 혜택:</strong></p>' +
+                    '<ul class="benefit-list">' +
+                    '<li>법인세율 우대 (일반기업 22% → 중소기업 10~20%)</li>' +
+                    '<li>접대비 한도 확대 (1,200만원 → 2,400만원)</li>' +
+                    '<li>이월결손금 100% 공제 (중견기업 60% 대비)</li>' +
+                    '<li>정책자금 우대금리 적용</li>' +
+                    '<li>공공조달 우대 및 가점</li>' +
+                    '</ul>' +
+                    '<br>' +
+                    '<p style="font-size: 0.9em; color: #666;">' +
+                    '※ 본 계산은 예시이며, 실제 적용 시에는 세무 전문가 상담을 받으시기 바랍니다.' +
+                    '</p>';
+                    
+                resultDiv.innerHTML = resultHtml;
+                resultDiv.className = 'result-card success';
+            }
+            
+            resultDiv.style.display = 'block';
+        }
+
+        function clearForm() {
+            document.getElementById('companyName').value = '';
+            document.getElementById('industry').value = '';
+            document.getElementById('avgSales').value = '';
+            document.getElementById('totalAssets').value = '';
+            document.getElementById('employees').value = '';
+            document.getElementById('independence').value = 'true';
+            document.getElementById('classificationResult').style.display = 'none';
+        }
+
+        function clearBenefitsForm() {
+            var companyTypeElement = document.getElementById('companyType');
+            if (companyTypeElement) {
+                companyTypeElement.value = 'small';
+            }
+            var benefitsResultElement = document.getElementById('benefitsResult');
+            if (benefitsResultElement) {
+                benefitsResultElement.style.display = 'none';
+            }
+        }
+
+        // 페이지 로드 시 초기화
+        window.addEventListener('DOMContentLoaded', function() {
+            var firstTab = document.querySelector('.tab');
+            var firstTabContent = document.querySelector('.tab-content');
+            
+            if (firstTab && firstTabContent) {
+                firstTab.classList.add('active');
+                firstTabContent.classList.add('active');
+            }
+            
+            console.log('페이지가 성공적으로 로드되었습니다.');
+        });
+    </script>
+</body>
+</html>
